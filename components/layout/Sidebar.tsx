@@ -1,0 +1,24 @@
+export function Sidebar() {
+  return (
+    <aside className="flex min-h-screen flex-col justify-between bg-[#032b57] text-white">
+      <div>
+        <div className="flex h-20 items-center border-b border-white/10 px-6">
+          <p className="text-lg font-bold tracking-tight">LockerManager</p>
+        </div>
+
+        <nav className="p-4">
+          <button className="w-full rounded-xl bg-[#0a3c71] px-4 py-3 text-left text-sm font-semibold">
+            Armários
+          </button>
+        </nav>
+      </div>
+
+      <div className="border-t border-white/10 p-4">
+        <div className="rounded-2xl bg-white/5 p-3">
+          <p className="text-sm font-semibold">Stefany Ribeiro</p>
+          <p className="mt-1 text-xs text-white/60">stefanyy2023@gmail.com</p>
+        </div>
+      </div>
+    </aside>
+  );
+}
