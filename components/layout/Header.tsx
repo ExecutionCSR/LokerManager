@@ -6,17 +6,25 @@ interface HeaderProps {
 
 export function Header({ total, ocupados, livres }: HeaderProps) {
   return (
-    <header className="flex items-start justify-between gap-4 border-b border-slate-200 bg-white px-6 py-6">
-      <div>
-        <h1 className="text-[34px] font-black tracking-tight text-slate-900">
-          Gerenciamento de Armários
-        </h1>
+    <header className="border-b border-slate-200 bg-white px-4 py-4 md:px-6 md:py-6">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 md:text-[34px]">
+            Gerenciamento de Armários
+          </h1>
 
-        <p className="mt-1 text-sm text-slate-500">
-          Controle de associação de funcionários aos armários corporativos
-        </p>
+          <p className="mt-1 text-sm text-slate-500">
+            Controle de associação de funcionários aos armários corporativos
+          </p>
+        </div>
 
-        <div className="mt-5 flex flex-wrap gap-3">
+        <button className="shrink-0 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+          Atualizar
+        </button>
+      </div>
+
+      <div className="mt-4 overflow-x-auto">
+        <div className="flex min-w-max gap-3">
           <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
             {total} total
           </div>
@@ -30,10 +38,6 @@ export function Header({ total, ocupados, livres }: HeaderProps) {
           </div>
         </div>
       </div>
-
-      <button className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
-        Atualizar
-      </button>
     </header>
   );
 }
