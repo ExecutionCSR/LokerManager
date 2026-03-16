@@ -32,6 +32,12 @@ export default async function LockerStatusPage({
         );
     }
 
+    const employeeAvatar =
+        locker.employee?.avatar ||
+        (locker.employee?.email
+            ? `https://i.pravatar.cc/160?u=${encodeURIComponent(locker.employee.email)}`
+            : null);
+
     return (
         <main className="flex min-h-screen items-center justify-center bg-[#f6f8fb] p-6">
             <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -57,12 +63,32 @@ export default async function LockerStatusPage({
                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                             Funcionário vinculado
                         </p>
-                        <p className="mt-2 text-lg font-bold text-slate-900">
-                            {locker.employee?.nome || 'Não associado'}
-                        </p>
-                        {locker.employee?.email && (
-                            <p className="mt-1 text-sm text-slate-500">
-                                {locker.employee.email}
+
+                        {locker.employee ? (
+                            <div className="mt-3 flex items-center gap-3">
+                                {employeeAvatar && (
+                                    <img
+                                        src={employeeAvatar}
+                                        alt={locker.employee.nome}
+                                        className="h-14 w-14 rounded-full border border-slate-200 object-cover"
+                                    />
+                                )}
+
+                                <div className="min-w-0">
+                                    <p className="text-lg font-bold text-slate-900">
+                                        {locker.employee.nome}
+                                    </p>
+                                    <p className="truncate text-sm text-slate-500">
+                                        {locker.employee.email}
+                                    </p>
+                                    <p className="mt-1 text-xs text-slate-400">
+                                        Setor: {locker.employee.setor}
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="mt-2 text-lg font-bold text-slate-900">
+                                Não associado
                             </p>
                         )}
                     </div>

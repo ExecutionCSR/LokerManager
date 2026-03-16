@@ -10,8 +10,8 @@ export function Sidebar() {
         const isActive = pathname === href;
 
         return `block rounded-xl px-4 py-3 text-sm font-semibold whitespace-nowrap transition ${isActive
-                ? 'bg-[#0a3c71] text-white'
-                : 'text-white hover:bg-[#0a3c71]'
+            ? 'bg-[#0a3c71] text-white'
+            : 'text-white hover:bg-[#0a3c71]'
             }`;
     }
 

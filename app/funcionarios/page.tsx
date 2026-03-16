@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
+import imageCompression from 'browser-image-compression';
 
 interface IEmployee {
     id: number;
@@ -19,6 +20,8 @@ export default function FuncionariosPage() {
     const [avatar, setAvatar] = useState('');
     const [loading, setLoading] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     async function loadEmployees() {
         const response = await fetch('/api/funcionarios', { cache: 'no-store' });
@@ -31,10 +34,15 @@ export default function FuncionariosPage() {
     }, []);
 
     function resetForm() {
+        if (avatarPreview) {
+            URL.revokeObjectURL(avatarPreview);
+        }
+
         setNome('');
         setEmail('');
         setSetor('');
-        setAvatar('');
+        setAvatarFile(null);
+        setAvatarPreview(null);
         setEditingId(null);
     }
 
@@ -74,21 +82,36 @@ export default function FuncionariosPage() {
 
         setLoading(true);
 
-        const url =
-            editingId !== null
-                ? `/api/funcionarios/${editingId}`
-                : '/api/funcionarios';
+        let avatarUrl = '';
 
-        const method = editingId !== null ? 'PUT' : 'POST';
+        if (avatarFile) {
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', avatarFile);
 
-        const response = await fetch(url, {
-            method,
+            const uploadResponse = await fetch('/api/upload', {
+                method: 'POST',
+                body: uploadFormData,
+            });
+
+            const uploadData = await uploadResponse.json();
+
+            if (!uploadResponse.ok) {
+                setLoading(false);
+                alert(uploadData.error || 'Erro ao enviar imagem.');
+                return;
+            }
+
+            avatarUrl = uploadData.url;
+        }
+
+        const response = await fetch('/api/funcionarios', {
+            method: editingId !== null ? 'PUT' : 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 nome,
                 email,
                 setor,
-                avatar,
+                avatar: avatarUrl || null,
             }),
         });
 
@@ -101,6 +124,8 @@ export default function FuncionariosPage() {
         }
 
         resetForm();
+        setAvatarPreview(null);
+        setAvatarFile(null);
         loadEmployees();
     }
 
@@ -139,11 +164,51 @@ export default function FuncionariosPage() {
                             />
 
                             <input
-                                value={avatar}
-                                onChange={(e) => setAvatar(e.target.value)}
-                                placeholder="URL da foto"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+
+                                    if (!file) return;
+
+                                    try {
+                                        const compressedFile = await imageCompression(file, {
+                                            maxSizeMB: 0.2,
+                                            maxWidthOrHeight: 512,
+                                            useWebWorker: true,
+                                        });
+
+                                        setAvatarFile(compressedFile);
+
+                                        const previewUrl = URL.createObjectURL(compressedFile);
+                                        setAvatarPreview(previewUrl);
+                                    } catch {
+                                        alert('Erro ao processar a imagem.');
+                                    }
+                                }}
                                 className="rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-slate-400"
                             />
+                            {avatarPreview && (
+                                <div className="mt-3 flex items-center gap-3">
+                                    <img
+                                        src={avatarPreview}
+                                        alt="Preview"
+                                        className="h-16 w-16 rounded-full border border-slate-200 object-cover"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            URL.revokeObjectURL(avatarPreview);
+                                            setAvatarFile(null);
+                                            setAvatarPreview(null);
+                                        }}
+                                        className="text-sm text-red-500 hover:underline"
+                                    >
+                                        Remover
+                                    </button>
+                                </div>
+                            )}
 
                             <div className="md:col-span-2 flex gap-2">
                                 <button
