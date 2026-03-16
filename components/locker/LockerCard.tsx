@@ -1,4 +1,5 @@
 import { LockerQrCode } from './LockerQrCode';
+import Link from 'next/link';
 
 interface IEmployee {
     id: number;
@@ -39,8 +40,8 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
 
                 <span
                     className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${isLivre
-                            ? 'border-slate-200 bg-slate-50 text-slate-500'
-                            : 'border-blue-200 bg-blue-50 text-blue-700'
+                        ? 'border-slate-200 bg-slate-50 text-slate-500'
+                        : 'border-blue-200 bg-blue-50 text-blue-700'
                         }`}
                 >
                     {isLivre ? 'Livre' : 'Ocupado'}
@@ -111,6 +112,15 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
                         </button>
                     </>
                 )}
+            </div>
+            <div className="mt-2">
+                <Link
+                    href={`/armarios/${locker.id}/print`}
+                    target="_blank"
+                    className="block w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                    Imprimir QR
+                </Link>
             </div>
         </div>
     );

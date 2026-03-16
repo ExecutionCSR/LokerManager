@@ -4,6 +4,35 @@ interface RouteContext {
     params: Promise<{ id: string }>;
 }
 
+export async function GET(_: Request, context: RouteContext) {
+    try {
+        const { id } = await context.params;
+        const lockerId = Number(id);
+
+        if (!lockerId) {
+            return Response.json({ error: 'ID inválido.' }, { status: 400 });
+        }
+
+        const locker = await prisma.locker.findUnique({
+            where: { id: lockerId },
+            include: {
+                employee: true,
+            },
+        });
+
+        if (!locker) {
+            return Response.json({ error: 'Armário não encontrado.' }, { status: 404 });
+        }
+
+        return Response.json(locker);
+    } catch (error) {
+        const message =
+            error instanceof Error ? error.message : 'Erro ao buscar armário.';
+
+        return Response.json({ error: message }, { status: 500 });
+    }
+}
+
 export async function PUT(request: Request, context: RouteContext) {
     try {
         const { id } = await context.params;

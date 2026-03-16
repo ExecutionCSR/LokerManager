@@ -16,3 +16,14 @@ body {
   color: #0f172a;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  body {
+    background: white;
+  }
+
+  @page {
+    size: auto;
+    margin: 0;
+  }
+}
