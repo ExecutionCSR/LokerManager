@@ -1,4 +1,3 @@
-import { LockerStatus } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
@@ -39,7 +38,7 @@ export async function POST(request: Request) {
         const locker = await prisma.locker.create({
             data: {
                 numero: String(numero).trim(),
-                status: employeeIdNumber ? LockerStatus.OCUPADO : LockerStatus.LIVRE,
+                status: employeeIdNumber ? 'OCUPADO' : 'LIVRE',
                 employeeId: employeeIdNumber,
             },
             include: {

@@ -1,4 +1,3 @@
-import { LockerStatus } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 
 interface RouteContext {
@@ -34,7 +33,7 @@ export async function PUT(request: Request, context: RouteContext) {
             data: {
                 numero: String(numero).trim(),
                 employeeId: parsedEmployeeId,
-                status: parsedEmployeeId ? LockerStatus.OCUPADO : LockerStatus.LIVRE,
+                status: parsedEmployeeId ? 'OCUPADO' : 'LIVRE',
             },
             include: {
                 employee: true,
