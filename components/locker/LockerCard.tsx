@@ -49,7 +49,9 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
             </div>
 
             <div className="mt-4 flex justify-center">
-                <LockerQrCode value={`locker:${locker.id}|numero:${locker.numero}`} />
+                <LockerQrCode
+                    value={`${process.env.NEXT_PUBLIC_APP_URL || ''}/armarios/${locker.id}/status`}
+                />
             </div>
 
             <div className="mt-5 min-h-[56px] rounded-2xl border border-dashed border-slate-200 px-3 py-3">
