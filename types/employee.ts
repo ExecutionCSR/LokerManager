@@ -3,5 +3,5 @@ export interface IEmployee {
     nome: string;
     email: string;
     setor: string;
-    avatar?: string;
+    avatar?: string | null;
 }

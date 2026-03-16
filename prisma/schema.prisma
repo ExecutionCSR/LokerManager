@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  setor     String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lockers   Locker[]
+
+  @@map("employees")
+}
+
+model Locker {
+  id         Int          @id @default(autoincrement())
+  numero     String       @unique
+  status     LockerStatus @default(LIVRE)
+  employeeId Int?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  employee   Employee?    @relation(fields: [employeeId], references: [id])
+
+  @@index([employeeId])
+  @@map("lockers")
+}
+
+enum LockerStatus {
+  LIVRE
+  OCUPADO
+}

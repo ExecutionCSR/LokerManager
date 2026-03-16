@@ -1,5 +1,20 @@
-import { ILocker } from '@/types/locker';
-import { QrMock } from './QrMock';
+import { LockerQrCode } from './LockerQrCode';
+
+interface IEmployee {
+    id: number;
+    nome: string;
+    email: string;
+    setor: string;
+    avatar?: string | null;
+}
+
+interface ILocker {
+    id: number;
+    numero: string;
+    status: 'LIVRE' | 'OCUPADO';
+    employeeId?: number | null;
+    employee?: IEmployee | null;
+}
 
 interface LockerCardProps {
     locker: ILocker;
@@ -33,7 +48,7 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
             </div>
 
             <div className="mt-4 flex justify-center">
-                <QrMock />
+                <LockerQrCode value={`locker:${locker.id}|numero:${locker.numero}`} />
             </div>
 
             <div className="mt-5 min-h-[56px] rounded-2xl border border-dashed border-slate-200 px-3 py-3">
@@ -42,6 +57,7 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
                         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-50 text-sm">
                             +
                         </div>
+
                         <div>
                             <p className="text-sm font-medium">Armário disponível</p>
                             <p className="text-xs text-slate-400">Aguardando associação</p>
@@ -50,15 +66,21 @@ export function LockerCard({ locker, onAssociate, onRemove }: LockerCardProps) {
                 ) : (
                     <div className="flex items-center gap-3">
                         <img
-                            src={locker.avatar}
-                            alt={locker.funcionario}
+                            src={
+                                locker.employee?.avatar ||
+                                `https://i.pravatar.cc/80?u=${locker.employee?.email || locker.numero}`
+                            }
+                            alt={locker.employee?.nome || 'Funcionário'}
                             className="h-10 w-10 rounded-full border border-slate-200 object-cover"
                         />
-                        <div>
-                            <p className="text-sm font-semibold text-slate-900">
-                                {locker.funcionario}
+
+                        <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-slate-900">
+                                {locker.employee?.nome}
                             </p>
-                            <p className="text-xs text-slate-500">Funcionário registrado</p>
+                            <p className="truncate text-xs text-slate-500">
+                                {locker.employee?.email}
+                            </p>
                         </div>
                     </div>
                 )}
